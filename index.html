@@ -1,37 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Swiggy Orders</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 500px; margin: 40px auto; padding: 20px; }
+    h2 { color: #FC8019; }
+    input { padding: 8px; margin: 5px; border: 1px solid #ccc; border-radius: 5px; }
+    button { padding: 8px 16px; background: #FC8019; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    li { padding: 8px; margin: 5px 0; background: #FFF3E8; border-radius: 5px; list-style: none; }
+  </style>
+</head>
 <body>
-<h2>🍔 Swiggy Orders (Azure)</h2>
-<input id="name" placeholder="Order name">
-<input id="price" placeholder="Price">
+
+<h2>&#127828; Swiggy Group Orders</h2>
+
+<input id="name" placeholder="Order name"/>
+<input id="price" placeholder="Price (Rs.)"/>
 <button onclick="addOrder()">Add</button>
+
 <ul id="list"></ul>
+
 <script>
 const API_URL = "https://dishaswiggy.azurewebsites.net/api/orders";
 
 async function addOrder() {
   const name = document.getElementById("name").value;
   const price = document.getElementById("price").value;
+  if (!name || !price) return alert("Enter both name and price!");
   await fetch(API_URL, {
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({ name, price })
   });
+  document.getElementById("name").value = "";
+  document.getElementById("price").value = "";
   loadOrders();
 }
 
 async function loadOrders() {
-  const res = await fetch(API_URL);
-  const data = await res.json();
-  const list = document.getElementById("list");
-  list.innerHTML = "";
-  data.forEach(o => {
-    list.innerHTML += `<li>${o.name} - ₹${o.price}</li>`;
-  });
+  try {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    const list = document.getElementById("list");
+    list.innerHTML = "";
+    data.forEach(o => {
+      list.innerHTML += `<li>&#127828; ${o.name} - Rs.${o.price}</li>`;
+    });
+  } catch(e) {
+    console.log("API not connected yet");
+  }
 }
 
 loadOrders();
-setInterval(loadOrders, 5000); // auto-refresh every 5 sec
+setInterval(loadOrders, 5000);
 </script>
+
 </body>
 </html>
