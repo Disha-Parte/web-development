@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Swiggy Orders (Azure)</h2>
+
+<input id="name" placeholder="Order name">
+<input id="price" placeholder="Price">
+<button onclick="addOrder()">Add</button>
+
+<ul id="list"></ul>
+
+<script>
+const API_URL = "PASTE_YOUR_FUNCTION_URL_HERE";
+
+async function addOrder() {
+  const name = document.getElementById("name").value;
+  const price = document.getElementById("price").value;
+
+  await fetch(API_URL, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ name, price })
+  });
+
+  loadOrders();
+}
+
+async function loadOrders() {
+  const res = await fetch(API_URL);
+  const data = await res.json();
+
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+
+  data.forEach(o => {
+    list.innerHTML += `<li>${o.name} - ₹${o.price}</li>`;
+  });
+}
+
+loadOrders();
+</script>
+
+</body>
+</html>
